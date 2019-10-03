@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+
+
+   
+    
+	<head>
+		<meta charset="utf-8">
+
+		<title>Machine Learning and Neural Networks</title>
+                <meta name="author" content="Roberto Santana">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<!-- <link rel="stylesheet" href="css/reveal.css">  -->
+                <link rel="stylesheet" href="css/fullscreen-img.css">
+                <link rel="stylesheet" href="css/added_css/notebook.css">
+   	        <link rel="stylesheet" href="css/reveal.css">
+                <link rel="stylesheet" href="css/theme/nncourse.css" id="theme">
+                                
+
+	</head>
+
+	<body>
+
+
+		<div class="reveal">
+			<div class="slides">
+
+				<section>
+                                          <div class="my_container">
+                                        <h2>Machine Learning and Neural Networks</h2>
+					<p>Roberto Santana and Unai Garciarena<p>
+					<p>Department of Computer Science and Artificial Intelligence</p>
+                                        <p>University of the Basque Country</p>
+                          		 </div>   
+				</section>
+                                <section id="sec:NN_Intro">   
+                                            <div class="my_container">
+                                             <h3> Introduction to Neural Networks: Table of Contents </h3>
+                                        
+                                              <table style="width:100%"; border=solid>
+
+                                                <tr>
+						 
+
+     						     <td> <p class="paragraph2"> <a href="#/sec:NNs_Perceptron"> Perceptron </a></p></td>
+                                                   
+                                                     
+                                                  </tr>                                                                                                                    
+
+                                    
+				              </table>	  
+                          	          </div>   
+
+  		   		</section>
+
+
+                             		
+                            	         <section>
+                                           <div class="my_container">
+                                           <mark class="red"></mark>
+                               	                 <h3>Initial neuron models</h3>
+                           		         <h4>Hebbian learning rule</h4>
+                                                     <ul>  
+      		           			           <li class="paragraph2"> Introduced by Donald Hebb and related to the ideas underlying the <mark class="red">associationism model</mark>.</li>
+                                                           <li class="paragraph2">The  <mark class="red">strength of the connection</mark>  between two neurons should increase as the frequency of their co-ocurrence increases.</li>
+                                                           <li class="paragraph2"><mark class="red">Drawback</mark>: As co-ocurrences appears more, the weights do not cease to increase (unstableness of the Hebbian learning rule).</li>
+                                                     </ul> 
+                                                      
+                          		   </div>
+
+					    <p class="paragraph2">  D. O. Hebb. <a href="https://www.amazon.com/Organization-Behavior-Neuropsychological-Theory/dp/0805843000">The organization of behavior: A neuropsychological theory.</a> Psychology Press. 1949.</p> 
+                                                  <p class="paragraph2">H. Wang, B. Raj, and E. P. Xing. <a href="https://arxiv.org/abs/1702.07800">On the Origin of Deep Learning.</a>   arXiv preprint arXiv:1702.07800. 2017.</p>       
+                                                   <aside class="notes">
+                                                       The Hebbian learning was one of the first ways to represent using formulas the idea of Associationism.
+                                                       The equation provides a way to update the strength of the connection of a neuron to the other neurons.
+                                                       The problem is that there is not limit to the growth of the weights.
+                                                       The Hebbian Learning Rule is seen as laying the foundation of neural networks. 
+                                            	   </aside>
+
+                             	        </section>
+
+
+				          <section  id="sec:NNs_Initial_Neuron_Model">
+                                          <mark class="red"></mark>
+                                              <div class="my_container">
+                                	        <h3>Initial neuron models</h3>
+                             		        <h4>Hebbian learning rule</h4>
+
+                                                    <mark class="red">\[ \Delta w_i = \eta \, x_i \, y \]</mark>
+                                                    <ul>                                                
+                                                         <p class="paragraph2"> \( \Delta w_i \): change in synaptic weights between pre-synaptic and post-synaptic neurons. </p>               
+                                                         <p class="paragraph2"> \( \eta \): learning rate </p>               
+                                                         <p class="paragraph2"> \(x_i\): activation of pre-synaptic neuron $i$ </p>               
+                                                         <p class="paragraph2"> \( y \): post-synaptic neuron reponse. </p>
+							 <p class="paragraph2"> The update is proportional to the product of the activation and the response.</p>             
+                                                    <ul/> 
+                          		     </div>   
+        			        </section>
+                                        <section>
+                                          <div class="my_container">
+                                          <mark class="red"></mark>
+                               	                 <h3>Initial neuron models</h3>
+                           		         <h4>Fire together, wire together</h4>
+						     <br>
+                                                      <ul> 
+
+                                                        <li class="paragraph2">Hebb (1949): When an axon of cell A is near enough to excite a cell B and <mark class="red">repeatedly or persistently takes part in firing it</mark>, some growth process or metabolic change takes place in one or both cells such that <mark class="red">A's efficiency</mark>, as one of the cells firing B, <mark class="red">is increased</mark>. </li>
+
+							 <li class="paragraph2">Konorski (1948): If a presynaptic neuron "i" repeatedly fires a postsynaptic neuron "j" within a short time then the synaptic strength between the two is increased, otherwise it is decreased. </li>
+
+
+                                                      </ul> 
+                          		 </div>   
+
+ 				       </section>
+
+                                      
+                                      <section id="sec:NNs_Perceptron">  
+                                	      <h3>Perceptron</h3>
+                                              <mark class="red"></mark>     
+                                              <div class="container">
+                                                  <span class="fragment"> 
+                                                  <div class="right">   
+                                                            
+                                                  <h4>Characteristics</h4>
+                                                     <ul>  
+
+                                                           <li class="paragraph2"> Initially, an <mark class="red">electronic device</mark> implementing some of the associationism ideas.</li>      	
+                                                           <span class="fragment"> 
+                                                           <li class="paragraph2">It implements  a  <mark class="red">linear function</mark>  of the input signals.</li>
+                                                           </span> 
+                                                           <span class="fragment"> 
+                                                           <li class="paragraph2">Perceptrons can <mark class="red">learn to associate</mark>  specific responses to specific stimuli. </li>  
+                                                           </span> 
+
+                                                           <span class="fragment"> 
+                                                           <li class="paragraph2">The <mark class="red">memory of a perceptron is distributed</mark> in the sense that any association may make use of a large proportion of the cells in the system.</li>  
+                                                           </span> 
+                                                           <span class="fragment">                                                         
+                                                          
+
+                                                     </ul>       
+ 
+                                                  </div>   
+
+
+                                                  </span>
+                                                 <div class="left">
+                                                   <h4>Implementation</h4>        
+                                                     <ul>  
+	           			       
+                                                     <p class="paragraph2"><img src="href=../../imgl6/Mark_I_perceptron1.jpeg"  height="300" width="480"></p>                                  
+                                                     </ul>  
+                                                     <p class="paragraph2"> Figure: <a href="https://en.wikipedia.org/wiki/File:Mark_I_perceptron.jpeg"> Commons Wikipedia.</a>  </p>
+
+                                                  </div>  
+                                                   <p class="paragraph2"> F. Rosenblatt. <a href="https://www.ncbi.nlm.nih.gov/pubmed/13602029">The perceptron: a probabilistic model for information storage and organization in the brain.</a> Psychological review, 65(6):386. 1958.</p>                        
+                                                                                          
+                                              </div>  
+                                                   <aside class="notes">
+                                                       The first ``machine'' implementing ideas from associanism. It was an electronic devise able to implement a linear sum of the input signals.
+                                                       Therefore, it can represent OR and AND functions. However, it cannot represent more complex functions such as XOR. 
+                                                       The criticism to the limitations of Perceptron made that work in this area was stucked for many years, until the 80s. 
+                                            	   </aside>
+
+                                          </section>
+
+                                        <section>
+                                	      <h3>Perceptron</h3>
+                                          <mark class="red"></mark>     
+                                              <div class="container">
+                                                  <div class="right">                                                               
+                                                  <h4>Characteristics</h4>
+                                                     <ul>  
+                                                           <li class="paragraph2">Stimuli impinge on a <mark class="red">retina of sensory units</mark> (S-points). </li>  
+                                                           <li class="paragraph2">Inputs are transmitted to a set of association cells (A-units) in a <mark class="red">projection-area</mark> (\( A_{I} \)). </li>   
+
+                                                            <li class="paragraph2"> The cells in the projection area receive each a number of <mark class="red">connections from the sensory points</mark>. </li>   
+                                                          
+
+                                                        
+
+                                                     </ul>        
+                                                  </div>   
+
+
+                                                  </span>
+                                                 <div class="left">
+                                                   <h4>Organization</h4>        
+                                                     <ul>  
+                            
+                                                     <p class="paragraph2"><img src="href=../../imgl6/Organization_Perceptron_Rosenblatt.png"  height="300" width="480"></p>                                  
+                                                     </ul>  
+
+                                                  </div>  
+                                                   <p class="paragraph2"> F. Rosenblatt. <a href="https://www.ncbi.nlm.nih.gov/pubmed/13602029">The perceptron: a probabilistic model for information storage and organization in the brain.</a> Psychological review, 65(6):386. 1958.</p>                        
+                                                                                          
+                                              </div>  
+                                        </section>
+
+
+				        <section>
+                                	      <h3>Perceptron</h3>
+                                          <mark class="red"></mark>     
+                                              <div class="container">
+                                                 
+                                                  <div class="right">                                                               
+                                                  <h4>Characteristics</h4>
+                                                     <ul>  
+                                                        
+                                                           <li class="paragraph2">Between the projection area and the association area ( \( A_{II}\)), connections are assumed to be <mark class="red">random</mark>. </li>  
+                                                       
+                                                           <li class="paragraph2">The <mark class="red">responses</mark>   ( \(R_1, R_2, \dots, R_n \)) are cells which respond in much the same fashion as the A-units. </li>    
+                                                         
+
+                                                        
+
+                                                     </ul>        
+                                                  </div>   
+
+
+                                                  </span>
+                                                 <div class="left">
+                                                   <h4>Organization</h4>        
+                                                     <ul>  
+                            
+                                                     <p class="paragraph2"><img src="href=../../imgl6/Organization_Perceptron_Rosenblatt.png"  height="300" width="480"></p>                                  
+                                                     </ul>  
+
+                                                  </div>  
+                                                   <p class="paragraph2"> F. Rosenblatt. <a href="https://www.ncbi.nlm.nih.gov/pubmed/13602029">The perceptron: a probabilistic model for information storage and organization in the brain.</a> Psychological review, 65(6):386. 1958.</p>                        
+                                                                                          
+                                              </div>  
+                                          </section>
+
+
+                                        <section>
+                                	      <h3>Perceptron</h3>
+                                          <mark class="red"></mark>     
+                                              <div class="container">
+
+                                                  <div class="right">   
+                                                            
+                                                  <h4>Characteristics</h4>
+                                                     <ul>  
+
+                                                           <li class="paragraph2"> <mark class="red">Sensory units</mark>: Collect data.</li>
+
+      		           			           <li class="paragraph2"><mark class="red">Association units</mark>: Linearly add the data with different weights and apply non-linear transform on the thresholded sum. </li>
+                                                         
+                                                           <li class="paragraph2"><mark class="red">Response units</mark>: Receive the data from association units and output them. </li>
+                                                       
+
+                                                     </ul>        
+                                                  </div>   
+
+
+                                                  </span>
+                                                 <div class="left">
+                                                   <h4>Organization</h4>        
+                                                     <ul>  
+                            
+                                                     <p class="paragraph2"><img src="href=../../imgl6/Perceptron_Connections.png"  height="300" width="480"></p>                                  
+                                                     </ul>  
+
+                                                  </div>  
+                                                   <p class="paragraph2"> F. Rosenblatt. <a href="https://www.ncbi.nlm.nih.gov/pubmed/13602029">The perceptron: a probabilistic model for information storage and organization in the brain.</a> Psychological review, 65(6):386. 1958.</p>                        
+                                                                                          
+                                              </div>  
+                                          </section>
+
+                                        <section>
+                                	      <h3>Perceptron</h3>
+                                          <mark class="red"></mark>     
+                                              <div class="container">
+                                                 
+                                                  <div class="right">   
+                                                            
+                                                  <h4>Learning</h4>
+                                                     <ul>  
+
+                                                           <li class="paragraph2"> <mark class="red">Non-linear activation units</mark> are introduced.</li>
+
+                                                           <li class="paragraph2"> Weights are updated as:
+
+                                                              <br> 
+                                                              \[
+
+                                                                 w_i(t+1) = w_i(t) + \left (d^j -y^j(t) \right) x^j_i,
+                                                                \]
+  
+                                                           </li>
+                                                           <p class="paragraph2"> where \( d^j \) is the desired output for sample  \( x^j \) </p>
+                                                     </ul>        
+                                                  </div>   
+
+                                                 <div class="left">
+                                                   <h4>Modern perceptron</h4>        
+                                                     <ul>  
+                            
+                                                     <p class="paragraph2"><img src="href=../../imgl6/Modern_Perceptron.png"  height="300" width="480"></p>                                  
+                                                     </ul>  
+
+                                                  </div>                                                                                                       
+                                                                                          
+                                              </div>
+					       <p class="paragraph2">H. Wang, B. Raj, and E. P. Xing. <a href="https://arxiv.org/abs/1702.07800">On the Origin of Deep Learning.</a>   arXiv preprint arXiv:1702.07800. 2017.</p>   
+                                        </section>
+
+
+
+				       <section>
+                                	 <h3>Perceptron</h3>
+                                          <mark class="red"></mark>     
+                                              <div class="container">
+                                                 
+                                                  <div class="right">   
+                                                            
+                                                  <h4>Common notation</h4>
+                                                     <ul>  
+
+                                                       <li class="paragraph2"> \(x=(x_1,\dots,x_n)\): Input vector.</li>
+						       <li class="paragraph2"> \(w=(w_1,\dots,w_n)\): Weight vector.</li>
+                                                       <li class="paragraph2"> \( w \cdot x \geq \theta \): Arithmetic test computed by the perceptron. </li>
+
+						       <li class="paragraph2"> \(x=(x_1,\dots,x_n,1)\): Extended input vector.</li>
+						       <li class="paragraph2"> \(w=(w_1,\dots,w_n,-\theta)\): Extended weight vector.</li>
+						       <li class="paragraph2"> \( w \cdot x \geq 0 \): Arithmetic test for extended vector and extended weight. </li>
+                                                      </ul>        
+                                                  </div>   
+
+                                                 <div class="left">
+                                                   <h4>Modern perceptron</h4>        
+                                                     <ul>  
+                            
+                                                     <p class="paragraph2"><img src="href=../../imgl6/Modern_Perceptron.png"  height="300" width="480"></p>                                  
+                                                     </ul>  
+
+                                                  </div>                                                                                                       
+                                                                                          
+                                              </div>
+					       <p class="paragraph2">H. Wang, B. Raj, and E. P. Xing. <a href="https://arxiv.org/abs/1702.07800">On the Origin of Deep Learning.</a>   arXiv preprint arXiv:1702.07800. 2017.</p>   
+                                        </section>
+									       
+
+					<section>
+                                	      <h3>Perceptron</h3>
+                                          <mark class="red"></mark>     
+                                              <div class="container">
+                                                  <span class="fragment"> 
+                                                  <div class="right">   
+
+                                                    <h4>Learning</h4>
+                                                    
+
+                                                          <p class="paragraph2"> At epoch \(t\), predictions are made as: 
+							    <br>
+							    <br>
+
+                                                           \[   
+                                                                  y^j(t) =   \begin{cases} 1, & \mbox{if } \sum_{i=1}^{n+1} w_i(t) x^j_i \geq 0 \, \forall j \\ 
+                                                                                      0, & \mbox{otherwise}  
+                                                                         \end{cases}
+                                                           \]
+                                                           </p>  
+
+                                                          <p class="paragraph2"> The error of the prediction is computed as: 
+							    <br>
+							    <br>
+
+
+                                                           \[   
+                                                                  MSE(t) =  \frac{1}{N} \sum_{j=1}^N  \left ( d^j-y^j(t) \right )^2
+                                                           \]
+                                                           </p>  
+
+
+                                                           <p class="paragraph2"> Weights are updated as:
+
+                                                              <br> 
+							    <br>
+                                                              \[
+                                                                 w_i(t+1) = w_i(t) + \left ( d^j -y^j (t) \right ) x_{j}^{i},
+                                                              \]
+  
+                                                           </p>                  
+
+                                                                                                         
+                                                  </div>   
+
+
+                                                  </span>
+                                                 <div class="left">
+                                                   <h4>Input and Notation</h4>      
+                                                      <ul>  
+
+                                                           <li class="paragraph2"> Inputs: 
+
+                                                              <ol>  
+
+                                                                <li class="paragraph2"> Dataset \(X\) where \(x_i^j\) is the value of variable \(x_i\) for instance \(x^j\) and  \(x_{n+1}^j=1 \, \forall j\) </li>
+                                                                <li class="paragraph2"> \(d^j\) is the class of  instance \(x^j\) (desired output).</li>
+                                                              </ol>  
+                                                           </li>
+                                                           <li class="paragraph2"> Notation: 
+
+                                                              <ol>  
+
+                                                                <li class="paragraph2"> \( w_i(t) \): Weight associated to feature \(i\) at time \(t\) .</li>
+
+                                                                <li class="paragraph2">  \(y^j\) is the output produced by the perceptron (predicted class).</li>
+                                           
+                                                              </ol>  
+                                                           </li>
+                                                                                                       
+                                                     </ul>          
+                                                  
+
+
+                                                  </div>  
+                                                   <p class="paragraph2"> F. Rosenblatt. <a href="https://www.ncbi.nlm.nih.gov/pubmed/13602029">The perceptron: a probabilistic model for information storage and organization in the brain.</a> Psychological review, 65(6):386. 1958.</p>                        
+                                                                                          
+                                              </div>  
+                                          </section>
+                                   
+
+
+			</div>
+		</div>
+
+
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			Reveal.initialize({
+				history: true,
+				transition: 'linear',
+
+				math: {
+					// mathjax: 'http://cdn.mathjax.org/mathjax/latest/MathJax.js',
+					config: 'TeX-AMS_HTML-full'
+				},
+
+				dependencies: [
+                                        { src: 'lib/js/fullscreen-img.js' },
+					{ src: 'lib/js/classList.js' },
+					{ src: 'plugin/math/math.js', async: true }
+
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
