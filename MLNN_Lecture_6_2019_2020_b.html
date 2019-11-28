@@ -1,0 +1,1970 @@
+<!doctype html>
+<html lang="en">
+
+
+   
+    
+	<head>
+		<meta charset="utf-8">
+
+		<title>Machine Learning and Neural Networks</title>
+                <meta name="author" content="Roberto Santana">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<!-- <link rel="stylesheet" href="css/reveal.css">  -->
+                <link rel="stylesheet" href="css/fullscreen-img.css">
+                <link rel="stylesheet" href="css/added_css/notebook.css">
+   	        <link rel="stylesheet" href="css/reveal.css">
+                <link rel="stylesheet" href="css/theme/nncourse.css" id="theme">
+
+
+
+        <script>
+	  var link = document.createElement( 'link' );
+	  link.rel = 'stylesheet';
+	  link.type = 'text/css';
+	  link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+	  document.getElementsByTagName( 'head' )[0].appendChild( link );
+	</script>		
+                          
+
+	</head>
+
+	<body>
+
+
+		<div class="reveal">
+			<div class="slides">
+
+				<section>
+                                          <div class="my_container">
+                                        <h2>Machine Learning and Neural Networks</h2>
+					<p>Roberto Santana and Unai Garciarena<p>
+					<p>Department of Computer Science and Artificial Intelligence</p>
+                                        <p>University of the Basque Country</p>
+                          		 </div>   
+				</section>
+                                <section id="sec:NN_Intro">   
+                                            <div class="my_container">
+                                             <h3>Neural Network Paradigms: Table of Contents </h3>
+                                        
+                                              <table style="width:100%"; border=solid>
+
+
+                                                  <tr>
+
+
+
+                                                     <td><p class="paragraph2"> <a href="#/sec:NNs_MLP">Multilayer perceptron </a></p></td>
+
+
+                                                     <td><p class="paragraph2"> <a href="#/sec:NNs_Types_and_Properties">MLP properties </a></p></td>
+
+                                                     <td><p class="paragraph2"> <a href="#/sec:NNs_Backpropagation"> Backpropagation </a></p></td>
+
+						      <td><p class="paragraph2"> <a href="#/sec:Gradient"> Gradient optimizers </a></p></td>                      
+                        
+
+                                                  </tr>    
+
+                                                  <tr>                 
+                                                     <td> <p class="paragraph2"> <a href="#/sec:NNs_Competitive"> Competitive learning  </a></p></td>         
+
+                                                     <td> <p class="paragraph2"> <a href="#/sec:NN_Quantization">Vector quantization </a></p></td>
+
+                                                     <td> <p class="paragraph2"> <a href="#/sec:NNs_LVQ"> LVQ networks </a></p></td>
+
+                                                     <td> <p class="paragraph2"> <a href="#/sec:NNs_SOM"> SOM and Kohonen NNs </a></p></td>
+ 
+                                                   </tr>        
+
+                                                  <tr>                 
+                                                     <td> <p class="paragraph2"> <a href="#/sec:NNs_Spiking"> Spiking networks </a></p></td>         
+                                                     <td> <p class="paragraph2"> <a href="#/sec:NNs_Neuron_Models"> Neuron modeling  </a></p></td>
+
+                                                     <td> <p class="paragraph2"> <a href="#/sec:NNs_Neural_Code">Neural code </a></p> </td>
+
+
+                                                      <td> <p class="paragraph2"> <a href="#/sec:NNs_SNNs_Topologies"> SNN topologies  </a></p></td>
+     
+                                                   </tr>     
+
+                                                  <tr>                 
+                                                     <td> <p class="paragraph2"> <a href="#/sec:NNs_Taxonomy"> NN Taxonomy </a></p></td>         
+                                                     <td> <p class="paragraph2"> <a href="#/sec:NNs_Neuron_Models">  </a></p></td>
+
+                                                     <td> <p class="paragraph2"> <a href="#/sec:NNs_Neural_Code"> </a></p> </td>
+
+
+                                                      <td> <p class="paragraph2"> <a href="#/sec:NNs_SNNs_Topologies"> </a></p></td>
+     
+                                                   </tr>  
+
+                                                                                       
+				              </table>	  
+                          	          </div>   
+
+  		   	             </section> 
+                          </section>                  
+
+
+
+        	              <section> 
+				      <section  id="sec:NNs_MLP">        
+                                               <mark class="red"></mark>
+                                               <div class="container">     
+                                                   <h3>Multilayer perceptron</h3>    
+
+                                                  <div class="right">
+                                                  <h4>Network architecture</h4>
+                                                      <ul>      
+                                                        <img src="href=../../imgl9/multilayer.png"  height="300" width="500">           
+					                
+                                                      </ul>                                               
+                                                      <p class="paragraph2"> Figure. <a href="http://www.asimovinstitute.org/neural-network-zoo/"> Neural network zoo.</a> </p>
+       
+                          		          </div>                                      
+                                                  <div class="left">   
+                                                      <h4>Characteristics</h4>
+                                                      <ul>   
+
+						          <li class="paragraph2">Provide a general framework for representing  <mark class="red">non-linear functional mappings</mark> between a set of input variables and a set of output variables. </li>
+   
+
+						          <li class="paragraph2">Mainly used for <mark class="red">supervised</mark> ML. It extends the representation capabilities of the <mark class="red">perceptron</mark>. </li>
+						          <li class="paragraph2">Contrary to the perceptron, it includes one or more <mark class="red">hidden layers</mark>. </li>                   
+						          <li class="paragraph2">Different <mark class="red">activation functions</mark> can added to the network. </li>      
+						         
+                              
+						
+                                                      </ul>    
+                                                  </div>    
+                                                   
+                                              </div>  
+                                                    <p class="paragraph2"> C. M. Bishop.  <a href="http://cs.du.edu/~mitchell/mario_books/Neural_Networks_for_Pattern_Recognition_-_Christopher_Bishop.pdf">Neural Networks for Pattern Recognition.</a>  Oxford University Press. 2005.</p>
+                                                <p class="paragraph2">R. Rojas.<a href="https://page.mi.fu-berlin.de/rojas/neural/"> Neural networks: a systematic introduction.</a>   Springer Science & Business Media. Chapter 7. 2013.</p>
+                                                  <aside class="notes">
+					
+                                            	  </aside>
+                                          
+                                                 
+        		             </section> 
+
+                                        <section>
+                                	      <h3>Perceptron</h3>
+                                          <mark class="red"></mark>     
+                                              <div class="container">
+                                                  <span class="fragment"> 
+                                                  <div class="right">   
+                                                            
+                                                  <h4>Learning</h4>
+                                                     <ul>  
+
+                                                           <li class="paragraph2"> <mark class="red">Non-linear activation units</mark> are introduced.</li>
+
+                                                           <li class="paragraph2"> Weights are updated as:
+
+                                                              <br> 
+                                                              \[
+
+                                                                 w_i(t+1) = w_i(t) + \left (d_j -y_j(t) \right) x_{j,i},
+                                                                \]
+  
+                                                           </li>
+                                                           <p class="paragraph2"> where \( d_j \) is the desired output </p>
+                                                     </ul>        
+                                                  </div>   
+
+
+                                                  </span>
+                                                 <div class="left">
+                                                   <h4>Modern perceptron</h4>        
+                                                     <ul>  
+                            
+                                                     <p class="paragraph2"><img src="href=../../imgl6/Modern_Perceptron.png"  height="300" width="480"></p>                                  
+                                                     </ul>  
+
+                                                  </div>  
+                                                  <p class="paragraph2">H. Wang, B. Raj, and E. P. Xing. <a href="https://arxiv.org/abs/1702.07800">On the Origin of Deep Learning.</a>   arXiv preprint arXiv:1702.07800. 2017.</p>                                                       
+                                                                                          
+                                              </div>  
+                                          </section>
+
+                                      <section>
+                                          <div class="my_container">
+                                          <mark class="red"></mark> 
+                                                   <h3>Multi-Layer perceptron</h3>                                              
+                                                   <h4>Properties</h4>
+                                                   <ol>
+
+						          <li class="paragraph2"><mark class="red">Perceptron</mark>: Single neuron. </li>
+						          <li class="paragraph2"><mark class="red">One-layer neural network</mark>: Putting perceptrons side by side. </li>
+						          <li class="paragraph2"><mark class="red">Multi-layer neural network (MLP)</mark>: Stacking one one-layer NN upon the other.  </li>                    
+						          <li class="paragraph2"><mark class="red">Universal approximation property</mark>: An MLP can represent any function.  </li>
+                                  						           
+                                                   </ol>            
+
+                          		 </div>                                                          
+                                         <p class="paragraph2">K. Kawaguchi. <a href="http://digitalcommons.utep.edu/dissertations/AAIEP05411/">A multithreaded software model for backpropagation neural network applications.</a> Ph. D. Thesis. 2000.</p>       
+                                                   <aside class="notes">
+  						       To pass from the perceptron to a neural network is a relatively simple process. 
+                                                       First, we create one layer putting side by side perceptrons.
+                                                       Then we stack layers in a different dimesion. 
+                                                       The universal approximation property is perhaps one of the most mentioned properties of neural networks. 
+                                                       However, this property is in reality more complex to analyze, so it can be divided in three different properties. 
+                                            	   </aside>
+ 				      </section>
+
+
+                                      <section>
+                                          <mark class="red"></mark> 
+                                          <div class="my_container">      
+                                                   <h3>Multi-Layer perceptron</h3>                                        
+                                                   <ul>
+                                                    <img src="href=../../imgl9/MLP_Networks_Parameters.png"  height="260" width="800">   
+                                                   </ul>                
+                                                   <h4>Network function</h4>
+                                                   <ul>                                  
+						         <p class="paragraph2">
+							   \[
+						   	       \begin{align}
+							           h({\bf{x}})  =& g \left ( w_1 h_1({\bf{x}}) +  w_2 h_2({\bf{x}}) + c \right ) \\
+
+							                        =& g \left ( w_1 g(\theta_1 x_1 + \theta_2 x_2 + b_1) +  w_2 g(\theta_3 x_1 + \theta_4 x_2 + b_2) + c \right )
+
+
+ 						   	       \end{align}                                              
+							   \]
+                                                          </p>
+						  
+                                   						           
+                                                   </ul>            
+                          		 </div>   
+                                            
+                                                      <p class="paragraph2"> Q. V. Le. <a href="http://ai.stanford.edu/~quocle/tutorial1.pdf"> A Tutorial on Deep Learning. Part 1: Nonlinear Classifiers and The Backpropagation Algorithm.</a> 2015.</p>                                             
+                                                  <aside class="notes">
+                                            	  </aside>
+ 				      </section>
+
+                                      <section  id="sec:NNs_Types_and_Properties">
+                                          <div class="my_container">           
+                                                   <h3>Multi-Layer perceptron</h3>                                   
+                                                   <ul>
+                                                    <img src="href=../../imgl9/Layers_Capabilities.png"  height="500" width="1200">   
+                                                   </ul>                
+          
+                          		 </div>   
+                                            
+                                                      <p class="paragraph2">A. K. Jain, J. Mao, and K. M. Mohiuddin.   Figure. <a href="http://metalab.uniten.edu.my/~abdrahim/mitm613/Jain1996_ANN%20-%20A%20Tutorial.pdf"> Artificial neural networks: A tutorial.</a> Computer. Vol. 29 No. 3. Pp. 31-44. 1996.  </p>                               
+             
+                                                  <aside class="notes">
+                                            	  </aside>
+ 				      </section>
+
+                                      <section>
+                                          <div class="my_container">
+                                                   <h3>Multi-Layer perceptron</h3>                                              
+                                                   <h4>Properties</h4>
+                                                   <ol>
+
+						          <li class="paragraph2"> <mark class="red">Boolean approximation</mark>: An MLP of one hidden layer can represent any boolean function exactly. </li>
+						          <li class="paragraph2"> <mark class="red">Continuous approximation</mark>: An MLP of one hidden layer can approximate any bounded continuous function with arbitrary accuracy. </li>
+						          <li class="paragraph2"> <mark class="red">Arbitrary approximation</mark>: An MLP of two hidden layers can approximate any function with arbitrary accuracy. </li>                                                      						           
+                                   						           
+                                                   </ol>            
+                          		 </div>   
+                                              
+                                                  <aside class="notes">
+            
+                                                       We will not explain or prove any of the properties but it is important to take them into account to evaluate the power of NNs. 
+                                                       Basically, we see that as the complexity of the networks is increased they are able to represent more general function classes. 
+                                            	  </aside>
+ 				      </section>
+                             </section>  
+
+        	              <section> 
+				      <section  id="sec:NNs_Backpropagation">       
+                                         
+                                          <mark class="red"></mark>
+                                          <div class="my_container">
+                                                   <h3>A simple model:</h3>        
+                                                   <h4>\(y = w x \)</h4>        
+
+                                                   <ul>
+						     <li class="paragraph2">We have a regression problem and want to learn a model. </li>
+						     <li class="paragraph2">This means finding the optimal parameter \(w\).</li>
+						     <li class="paragraph2"> We use the squared error as loss function. </li>
+						                                                      
+                                                   </ul>						           
+                                                       	                                                   
+                          		 </div>                                                          
+                                                   
+                                                   <aside class="notes">
+  						     
+                                            	   </aside>
+        		              </section>
+
+
+				      				       <section>
+                                            
+                                        <h3>Evaluating the quality of a model </h3>
+
+                                        <table id="customers_big">
+                                          <colgroup>
+
+
+					  <col style="background-color:yellow">
+                                          <col span="3" style="background-color:white">
+                                          <col span="3" style="background-color: #bfff00">
+                                          
+                                          
+
+                                          </colgroup>
+					    <tr> <th>Input </th> <th>True Model</th><th>Output</th><th>Abs. Error</th><th>Square Error</th>  </tr>
+                                             <tr> <th>x </th> <th>M(x)=2x</th><th>g(x)</th><th>|g(x)-M(x)|</th><th>(g(x)-M(x))^2</th>  </tr>
+                                        <tr><th>0 </th> <th>0 </th><th>0 </th><th>0</th><th>0</th></tr>
+		                        <tr><th>1 </th> <th>2 </th><th>3 </th><th>1</th><th>1</th></tr>
+                                        <tr><th>2 </th> <th>4 </th><th>6</th><th>2</th><th>4</th></tr>
+		                        <tr><th>3 </th> <th>6 </th><th>9</th><th>3</th><th>9</th></tr>
+                                        <tr><th>4 </th> <th>8 </th><th>12</th><th>4</th><th>16</th></tr>
+		                        <tr><th>5 </th> <th>10</th><th>15</th><th>5</th><th>25 </th></tr>
+		                        <tr><th>All</th><th>  </th><th>  </th><th>15</th><th>55 </th></tr>
+                                            
+
+                                         </table>
+                                              
+
+			 	       </section>
+
+
+				       	
+       				       <section>
+                                            
+                                        <h3>Evaluating the quality of a model </h3>
+
+				
+                                        <table id="customers_big">
+                                        <colgroup>                                         
+                                          
+                                          <col span="8" style="background-color:white">
+                                          <col span="3" style="background-color: #bfff00">
+
+                                        </colgroup>
+                                             <tr> <th>Input(x) </th> <th>True Model</th><th>W=3</th><th>SE (W=3)</th><th>SE (W=3.02)</th><th>SE (W=2.98)</th>  </tr>
+                                        <tr><th>0 </th> <th>0 </th><th>0 </th><th>0</th><th>0</th><th>0</th></tr>
+		                        <tr><th>1 </th> <th>2 </th><th>3 </th><th>1</th><th>1.04</th><th>0.96</th></tr>
+                                        <tr><th>2 </th> <th>4 </th><th>6</th><th>4</th><th>4.16</th><th>3.84</th></tr>
+		                        <tr><th>3 </th> <th>6 </th><th>9</th><th>9</th><th>9.36</th><th>8.64</th></tr>
+                                        <tr><th>4 </th> <th>8 </th><th>12</th><th>16</th><th>16.64</th><th>15.36</th></tr>
+		                        <tr><th>5 </th> <th>10</th><th>15</th><th>25</th><th>26.01 </th><th>24.01</th></tr>
+		                        <tr><th>All</th><th>  </th><th>  </th><th>55</th><th>57.22 </th><th>52.82</th></tr>
+                                            
+
+                                         </table>
+                                              
+
+			 	      </section>
+
+				       
+				   <section>
+                                          <div class="my_container">
+                                               <mark class="red"></mark>   
+   
+                                                   <h4>Error function</h4> 
+                                             
+                                                   <ol>
+						            <img src="href=../../img_2019_Lect_6/Error_function.png"  height="500" width="800">
+			
+                                                    </ol>     						           
+                          		 </div>      
+
+                                                  <aside class="notes">
+                                                                                                  
+                                           	  </aside>
+ 				   </section>
+
+
+				   <section>                                                
+                                          <mark class="red"></mark>
+                                          <div class="my_container">
+                                                   <h3>Derivative</h3>        
+                                                   <ul>
+						     <li class="paragraph2">Because the error function is continuous, a small change in \(x\) can only result in a small change in \(y\). </li>
+
+					
+						     <li class="paragraph2">This could be expressed as:
+
+						       <br>
+                                                       <br>
+                                                       \[
+                                                         f(x + \epsilon_x) = y + \epsilon_y
+
+						       \]
+
+
+						     </li>
+						     <li class="paragraph2">Because the function is smooth,  when \(\epsilon_x\) is small enough:
+						       
+						       <br>
+                                                       <br>
+
+						        \[
+                                                         f(x + \epsilon_x) = y + a * \epsilon_x
+						       \]
+
+						     </li>
+						     <li class="paragraph2">The previous linear approximation is valid, only in the \(\epsilon\)-neighborhood of \(x\), i.e, if we are close enough to \(x\). </li>
+						     <li class="paragraph2"> The <mark class="red">slope</mark> of this linear approximation is called the <mark class="red">derivative</mark>. </li>
+					     
+                                                   </ul>					           
+                                                       	                                                   
+                          		 </div>                                                          
+                                                   
+                                                   <aside class="notes">
+  						     
+                                            	   </aside>
+        			   </section>
+
+
+				     <section>
+                                          <div class="my_container">
+                                               <mark class="red"></mark>   
+   
+                                                   <h4>Derivative</h4> 
+                                             
+                                                   <ol>
+						            <img src="href=../../img_2019_Lect_6/Graph_of_sliding_derivative_line.gif"  height="500" width="800">
+			
+                                                    </ol>     						           
+                          		 </div>      
+
+                                                  <aside class="notes">
+                                                                                                  
+                                           	  </aside>
+ 				   </section>
+
+
+
+				   <section>                                                
+                                          <mark class="red"></mark>
+                                          <div class="my_container">
+                                                   <h3>Derivative</h3>        
+                                                   <ul>
+						   
+						     
+						     <li class="paragraph2"> A <mark class="red">positive slope</mark> means the function increases as we increase \(x\). </li>
+
+						     <li class="paragraph2">  Similarly, a <mark class="red">negative slope</mark> negative slope means the function increases when we decrease \(x\). </li>
+
+
+						    <li class="paragraph2"> If the derivative is zero, there is a  <mark class="red">local optimum</mark>.  </li>
+					      
+
+
+						     <li class="paragraph2">Therefore, a good strategy to find the optimum is to move \(x\) in the <mark class="red">oppossite direction</mark> to the sign of its derivative at the current point. </li>
+
+					
+						     <li class="paragraph2">This is what <mark class="red">gradient descent</mark>, a popular optimization algorithm, uses to implement its update rule as:
+						       <br>
+                                                       <br>
+                                                       \[
+                                                         w = w - \mu f'(w) 
+						       \]
+
+where \( \mu \) is a learning rate parameter. 
+						     </li>						  
+						     
+                                                   </ul>						           
+                                                       	                                                   
+                          		 </div>                                                          
+                                                   
+                                                   <aside class="notes">
+  						     
+                                            	   </aside>
+        		           </section>
+
+				 
+  				   <section>
+                                          <div class="my_container">
+                                               <mark class="red"></mark>   
+   
+                                                   <h4>Gradient descent</h4> 
+                                             
+                                                   <ol>
+						            <img src="href=../../img_2019_Lect_6/gradient_descent.gif"  height="500" width="800">
+			
+                                                    </ol>     						           
+                          		 </div>      
+
+                                                  <aside class="notes">
+                                                                                                  
+                                           	  </aside>
+ 					</section>
+
+								   
+                                   <section>
+                                   <mark class="red"></mark>
+                                          <div class="my_container">
+                                                   <h3>Gradient</h3>                                                   
+                                                   <h4>Definition and interpretation</h4>
+		 
+                                              <p class="paragraph2"> The gradient of a function \( J(\theta_1,\dots,\theta_d) \) is a vector-value function defined as: 
+							    <br>
+							    <br>
+							    <br>
+							    
+                                                \[
+                                                    \nabla J(\theta_1,\dots,\theta_d) = < \frac{\partial J}{\partial \theta_1}(\theta_1,\dots,\theta_d), \dots,\frac{\partial J}{\partial \theta_d}(\theta_1,\dots,\theta_d)>
+                                                \] 
+                                              </p>         
+                          		 
+                                              <ol>
+
+						   <li class="paragraph2">The gradient of a multi-variable function has <mark class="red">a component for each direction</mark>. </li>
+						   <li class="paragraph2">The gradient points in the  <mark class="red">direction of greatest increase</mark>. </li>
+                                                   
+                                               </ol>						           
+                                                    
+                                                   
+                          		 </div>                                                          
+                                                   
+                                                   <aside class="notes">
+  						     
+                                            	   </aside>
+        		           </section> 
+                                  
+                                   <section>
+                                   <mark class="red"></mark>
+                                          <div class="my_container">
+                                                   <h3>Gradient descent</h3>                                                   
+                                                   <h4>Finding the optimum of the loss function</h4>
+
+						          <p class="paragraph2">  <mark class="red">Gradient descent</mark>: A local minimization method based on updating the parameters of a function \( J(\theta_1,\dots,\theta_d) \) in the opposite direction to its gradient.  </p>
+
+						          <p class="paragraph2"> A parameter \( \mu \) is used to indicate the <mark class="red">learning rate of the algorithm</mark> (the size of the step taken to reach to local optimum)    </p>						         
+					
+                                                    <p class="paragraph2">S. Ruder.<a href="https://arxiv.org/abs/1609.04747"> An overview of gradient descent optimization algorithms.</a> arXiv preprint arXiv:1609.04747. 2016.</p>                                                                                                
+                          		 </div>                                                          
+                                                   
+                                                   <aside class="notes">
+  						     
+                                            	   </aside>
+        		           </section> 
+                     
+                                   <section>
+                                                <div class="container">
+                                                <h3>Multi-Layer perceptron</h3> 
+                             		        <h4>What about the weights of hidden layers?</h4>                                                                                                     
+                                                <div class="right">
+                             		        <h4>Network function</h4>
+                                                   <ul>                                  
+						         <p class="paragraph2">
+							   \[
+						   	       \begin{align}
+							           h({\bf{x}})  =& g \left ( w_1 h_1({\bf{x}}) +  w_2 h_2({\bf{x}}) + c \right ) \\
+
+							   =&  g(w_1 g(\theta_1 x_1 + \theta_2 x_2 + b_1) \\  
+
+							   +&    w_2 g(\theta_3 x_1 + \theta_4 x_2 + b_2) + c) 
+
+ 						   	       \end{align}                                              
+							   \]
+                                                          </p>
+						  
+                                   						           
+                                                   </ul>
+
+
+						   <h4>What is needed?</h4>
+                                                   <ul>                                  
+						      <ol>
+
+						   <li class="paragraph2">We need a way to update the weights of the hidden layers (gradient descent?). </li>
+						   <li class="paragraph2">For that we would need how to compute the gradient of the NN error with respect to each weight</mark>. </li>
+                                                   
+                                               </ol>	  						  
+                                   						           
+                                                   </ul>   
+  
+               
+                                                 </div>            
+
+                                                <div class="left">     
+                             		        <h4>MLP</h4> 
+                                                   <ul>
+                                                    <img src="href=../../imgl9/MLP_Networks_Parameters.png"  height="250" width="3500">   
+                                                   </ul>                
+                                                  
+						 </div>    
+                               
+                                                 </div>                           
+
+                                                <p class="paragraph2"> Q. V. Le.  <a href="ai.stanford.edu/~quocle/tutorial1.pdf">A Tutorial on Deep Learning. Part 1. Nonlinear classifiers and the backpropagation algorithm. </a>2015.</p>                                                                                                    
+                                               
+                                                   <aside class="notes">
+                                                 
+                                            	   </aside>
+        			       </section>
+		                       <section>                                                
+                                          <mark class="red"></mark>
+                                          <div class="my_container">
+                                                   <h3>Derivative of a composite function</h3>        
+                                                   <ul>
+						    <li class="paragraph2">Since our network function is a a composite function, we need to compute its derivative applying the chain rule.</li>
+						 
+					
+						     <li class="paragraph2"><mark class="red">Chain rule</mark>:
+
+						       <br>
+                                                       <br>
+                                                       \[
+                                                         h'(x)= \frac{d}{dx}[g(f(x))] = g'(f(x)) f'(x)
+
+						       \]
+
+						     </li>					     
+									     
+                                                   </ul>					           
+                                                       	                                                   
+                          		 </div>                                                          
+                                                   
+                                                   <aside class="notes">
+  						     
+                                            	   </aside>
+        			   </section>
+
+		                  <section>       
+                                         
+                                          <mark class="red"></mark>
+                                          <div class="my_container">
+                                                   <h3>Backpropagation</h3>        
+                                                   <h4>Characteristics</h4>        
+
+                                                   <ul>
+						     <li class="paragraph2">Backpropagation provides a computationally efficient method for evaluating the partial derivatives of all the weights of the neural network with respect to the output.</li>
+						     <li class="paragraph2">Gradients are computed by first estimating the error in each layer of the network.</li>
+						     <li class="paragraph2">Gradients are then used by the optimization algorithms (i.e., variants of gradient descent) to update the weights incrementally.</li>
+						     <li class="paragraph2">Backpropagation reuses the errors of the outer (closer to the output) layers to compute the errors of the inner layers in a more efficient way.</li>
+						     
+                                                   
+                                                   </ul>						           
+                                                       	                                                   
+                          		 </div>                                                          
+                                                   
+                                                   <aside class="notes">
+  						     
+                                            	   </aside>
+        		          </section>
+
+
+				  <section>       
+                                         
+                                          <mark class="red"></mark>
+                                          <div class="my_container">
+                                                   <h3>Backpropagation</h3>        
+                                                   <h4>Steps</h4>        
+
+                                                   <ol>
+						     <li class="paragraph2"><mark class="red">Feed-forward computation</mark>: The network is used for processing the inputs and the error between predictions and target values is computed.</li>
+						     <li class="paragraph2"><mark class="red">Backpropagation of the error</mark>: The error is backpropagated through the network. For every weight, the partial derivatives are computed.</li> 
+						     <li class="paragraph2"><mark class="red">Weight updates</mark>: The partial derivatives are used to update the weights.</li> 
+                                                   
+                                                   </ol>						           
+                                                       	                                                   
+                          		 </div>                                                          
+                                                   
+                                                   <aside class="notes">
+  						     
+                                            	   </aside>
+        		              </section>
+
+
+                                    <section>
+                                          <div class="my_container">          
+        
+                             		           <h3>MLP Backpropagation</h3>                            
+                                                   <ul>
+                                                    <img src="href=../../imgl9/BackPropagation_Simpler.png"  height="500" width="800">   
+                                                   </ul>                
+          
+                          		 </div>   
+                                            
+                                                      <p class="paragraph2">A. K. Jain, J. Mao, and K. M. Mohiuddin.   Figure. <a href="http://metalab.uniten.edu.my/~abdrahim/mitm613/Jain1996_ANN%20-%20A%20Tutorial.pdf"> Artificial neural networks: A tutorial.</a> Computer. Vol. 29 No. 3. Pp. 31-44. 1996.  </p>                               
+             
+                                                  <aside class="notes">
+                                            	  </aside>
+ 				      </section>
+
+
+                                       <section>
+                                                <div class="container">
+                                                <h3>Multi-Layer perceptron</h3> 
+                             		        <h4>Backpropagation</h4>                                                  
+                                                   
+                                                <div class="right">
+                             		        <h4>Recursive computation</h4>         
+                                                   <ol>              
+
+						     <li class="paragraph2"> Perform a  <mark class="red">feedforward pass</mark>  to compute \( h^1, h^2, h^3, \dots, h^L \).</li>
+
+						     <li class="paragraph2"> For the output layer <mark class="red">compute</mark>:
+                                                              \[   
+                                                                  \delta_1^L = 2(h^L-y) g' \left( \sum_{j=1}^{S_{L-1}} \theta_{1j}^{L-1}h_j^{L-1}+b_1^{L-1} \right)
+                                                              \]
+
+
+                                                         </li>
+
+						     <li class="paragraph2"> Perform a  <mark class="red">backward pass</mark> for   \( l = L-1, L-2, \dots, 2. \; \; \) For each neuron \(i\) in layer \(l\), <mark class="red">compute</mark>:
+  \[   
+                                                                  \delta_i^L =  \left( \sum_{j=1}^{S_{l+1}} \theta_{ji}^{l}
+\delta_j^{l+1} \right)  g' \left( \sum_{j=1}^{S_{l-1}} \theta_{ij}^{l-1}h_j^{l-1}+b_i^{l-1} \right)
+                                                              \]
+
+                                                         </li>
+
+
+						     <li class="paragraph2"> The desired  <mark class="red">partial derivatives</mark>  can be computed as \( \Delta \theta_{ij}^{l} = h_j^{l} \delta_i^{l+1} \) and \( \Delta b_i^{l} = \delta_i^{l+1} \).</li>
+   
+                                                      </ol>                    
+               
+                                                 </div>            
+
+                                                <div class="left">     
+                             		        <h4>Notation</h4> 
+                                                   <ul> 
+                                                         <p class="paragraph2"> \( h(x) \): decision function  </p>   
+                                                         <p class="paragraph2"> \( g \): activation function  </p>                  
+                                                         <p class="paragraph2"> \(  \theta^l_{ij} \): weight at layer \(l\)-th between input \(j\)-th and neuron \(i\)-th in layer \((l+1)\)-th </p>  
+                                                         <p class="paragraph2"> \( b_i \): bias  of neuron \( i \)  </p>    
+                                                         <p class="paragraph2"> \( s_l \): number of neurons in the layer </p>       
+
+                                                     <ul/>      
+						 </div>        
+
+
+                                                 </div>                           
+                                                                                                 
+                                               
+                                                   <aside class="notes">
+                                                 
+                                            	   </aside>
+        			      </section>
+
+                           </section> 
+
+                            <section>
+                                     <section   id="sec:Gradient">
+                                      <mark class="red"></mark>
+                                          <div class="my_container">
+                                                   <h3>Optimization methods for deep neural networks</h3>                                                   
+                                                   <h4>Finding the optimum of the loss function</h4>
+
+						          <p class="paragraph2">  <mark class="red">Optimization</mark> is involved in several aspects of machine learning algorithms.  </p>
+
+						          <p class="paragraph2"> Of all the optimization problems involved in deep learning, the most difficult is  <mark class="red">neural network training</mark>.</p>						         
+						   <p class="paragraph2"> Optimization is also relevant to the <mark class="red">efficiency</mark> of the DNN learning algorithm.</p>
+
+			                           <p class="paragraph2"> We focus on the optimization problem of finding the parameters \( \Theta \) of a neural network that significantly reduce a (possibly regularized) loss function  \( J(\Theta) \).</p>
+						   
+                                                                                            
+                          		 </div>                                                          
+                                                   <p class="paragraph2"> I. Goodfellow and Y. Bengio and A. Courville. <a href="http://www.deeplearningbook.org/"> Deep Learning. Chapter 8. Optimization for Training Deep Models.</a> MIT Press. 2016. </p>                                            
+                                                   <aside class="notes">
+  						     
+                                            	   </aside>
+        		                </section> 
+
+
+                                     <section  id="sec:GradientDescent">
+                                         <mark class="red"></mark>
+                                          <div class="my_container">
+                                                   <h3>Gradient descent</h3>                                                   
+                                                   <h4>Finding the optimum of the loss function</h4>
+
+						          <p class="paragraph2"> Gradient descent algorithms can be grouped in <mark class="red">three classes</mark> according to the way the gradient is used for the updates: </p>
+    
+                                                   <ol>
+						          <li class="paragraph2">Batch gradient descent.</li>
+						          <li class="paragraph2">Stochastic gradient descent (SGD).</li>
+						          <li class="paragraph2">Mini-batch gradient descent.</li>                                                 
+                                                   </ol>
+					
+                                                    <p class="paragraph2">S. Ruder.<a href="https://arxiv.org/abs/1609.04747"> An overview of gradient descent optimization algorithms.</a> arXiv preprint arXiv:1609.04747. 2016.</p>                                                                                                
+                          		 </div>                                                          
+                                                   
+                                                   <aside class="notes">
+  						     
+                                            	   </aside>
+        		           </section> 
+                                   <section>
+                                          <div class="my_container">
+                                                   <h3>Gradient descent variants</h3>                                                   
+                                                   <h4>Batch gradient descent</h4>
+
+						   <p class="paragraph2"> To perform <mark class="red">one parameter update</mark>, computes the gradient of \(J\) <mark class="red">using all the points</mark> the dataset as: 
+							    <br>
+							    <br>
+							    <br>
+							    
+                                                    <mark class="red">
+                                                    \[
+                                                        \theta = \theta - \epsilon  \nabla_{\theta} J(\theta)
+                                                     \] 
+                                                    </mark>
+                                                   </p>
+
+                                                   <ol>
+					                <li class="paragraph2"> Guaranteed to converge to the global minimum for convex functions and to local minimum for non-convex functions. </li>			        
+                                                  
+						        <li class="paragraph2"> Not very efficient since for performing a single update the gradients of the whole dataset are evaluated. </li>
+                                                   <ol/>
+					                                                                                            
+                          		 </div>                                                          
+                                                   
+                                                   <aside class="notes">
+  						     
+                                            	   </aside>
+        		           </section> 
+                                   <section>
+                                          <div class="my_container">
+                                                   <h3>Gradient descent variants </h3>                                                   
+                                                   <h4>Stochastic gradient descent (SGD)</h4>
+
+						   <p class="paragraph2"> <mark class="red">A parameter update</mark>  is performed  <mark class="red">for each point</mark> \(x^i\) and label \(y^i\) as:                                      
+
+							    <br>
+							    <br>
+							    <br>
+							    
+                                                     <mark class="red">
+                                                    \[
+                                                        \theta = \theta - \epsilon  \nabla_{\theta} J(\theta;x^i,y^i)
+                                                     \] 
+                                                    </mark>
+                                                   </p>
+
+                                                   <ol>
+					                <li class="paragraph2"> Usually much faster than batch gradient descent. </li>				        
+					  	        <li class="paragraph2"> Can be used to learn online.</li>
+
+						        <li class="paragraph2"> Convergence to local minimum is not guaranteed.</li>
+                                                   <ol/>
+					                                                                                            
+                          		 </div>                                                          
+                                                   
+                                                   <aside class="notes">
+  						     
+                                            	   </aside>
+        		           </section> 
+                                   <section>
+                                          <div class="my_container">
+                                                   <h3>Gradient descent variants</h3>                                                                                               <h4>Mini-batch gradient descent</h4>
+
+						   <p class="paragraph2"> <mark class="red">A parameter update</mark> is performed <mark class="red">for each mini-batch</mark>  of \(n\) points \( (x^i,\dots,x^{i+n})\) and labels \((y^i,\dots,y^{i+n})\) as:
+							    <br>
+							    <br>
+							    <br>
+							    
+
+                                                     <mark class="red">
+                                                    \[
+                                                        \theta = \theta - \epsilon  \nabla_{\theta} J(\theta; (x^i,\dots,x^{i+n}),(y^i,\dots,y^{i+n}))
+                                                     \] 
+                                                    </mark>
+                                                   </p>
+                                                   <ol>
+					                 <li class="paragraph2"> Combines characteristics of batch gradient descent and SGD. </li>				        
+						         <li class="paragraph2"> Can make use of highly optimized matrix optimizations.</li>
+
+						         <li class="paragraph2"> Nevertheless, it does not guarantee a good convergence.</li>
+						         <li class="paragraph2"> Very sensitive to the learning rate \( \epsilon \).</li>
+
+						         <li class="paragraph2"> It can be trapped in local optima, particularly saddle points.</li>
+                                                   <ol/>
+
+					                                                                                            
+                          		 </div>                                                          
+                                                   
+                                                   <aside class="notes">
+  						     
+                                            	   </aside>
+        		           </section>
+
+
+				   <section>
+                                          <mark class="red"></mark>
+                                          <div class="my_container">
+   					    <h4>(Mini-batch) stochastic gradient descent</h4>
+                                            <ol>
+					        <img src="href=../../img_2019_Lect_6/SGD_Algorithm.png"  height="425" width="1000">           
+
+<br>
+                                                    </ol>     		
+                          		  </div>
+                                                   <p class="paragraph2"> I. Goodfellow and Y. Bengio and A. Courville. <a href="http://www.deeplearningbook.org/"> Deep Learning. Chapter 8. Optimization for Training Deep Models.</a> MIT Press. 2016. </p>      
+					  
+                                                  <aside class="notes">
+                                           	  </aside>
+ 		                 </section>
+
+
+
+				   
+			           <section>
+                                          <div class="my_container">        
+	                                    <h3>Advanced gradient descent methods</h3>
+					    <h4>Momentum</h4>
+                                                      <ul>  
+                                                           <li class="paragraph2"> A fraction <mark class="red"> \( \alpha \)  </mark>of the update vector of the past time step is added to the current vector as: 
+							    <br>
+							    <br>
+							    <br>
+							    
+                                                           <mark class="red">
+                                                             \[
+                                                                v_t = \alpha v_{t-1} -  \epsilon  \nabla_{\theta} J(\theta) \\
+                                                                \theta = \theta + v_t
+                                                             \] 
+                                                           </mark>
+
+                                                          </li>
+
+      		           			           <li class="paragraph2"> Helps accelerate SGD in the relevant directions and dampens oscillations.</li>
+
+							   
+      		           			           <li class="paragraph2"> The larger \(\alpha \) is relative to  \(\epsilon\), the the more previous gradientes affect the current direction.</li>
+      		           		         
+      		           	                                                           
+                                                     </ul> 
+                          		 </div>                                                          
+                                                   
+                                                   <aside class="notes">
+  						     
+                                            	   </aside>
+        		           </section> 
+
+			   	   <section>
+                                          <mark class="red"></mark>
+                                          <div class="my_container">
+   					    <h4>Momentum</h4>
+                                            <ol>
+					        <img src="href=../../img_2019_Lect_6/SGD_with_Momentum_Algorithm.png"  height="425" width="1000">           
+
+<br>
+                                                    </ol>     		
+                          		  </div>
+                                                   <p class="paragraph2"> I. Goodfellow and Y. Bengio and A. Courville. <a href="http://www.deeplearningbook.org/"> Deep Learning. Chapter 8. Optimization for Training Deep Models.</a> MIT Press. 2016. </p>      
+					  
+                                                  <aside class="notes">
+                                           	  </aside>
+ 		                 </section>
+
+				   <section>
+                                          <div class="my_container">        
+	                                    <h3>Advanced gradient descent methods</h3>
+                                                  <h4>Nesterov accelerated gradient (NAG)</h4>
+                                                      <ul>  
+
+      		           			           <li class="paragraph2"> Computes an approximate prediction of the parameters in order to calculate the gradient w.r.t. the approximate future position of the parameters.</li>
+                                                           <li class="paragraph2"> The updates are defined as: 
+							    <br>
+							    <br>
+							    <br>
+							    
+                                                           <mark class="red">
+                                                             \[
+                                                                v_t = \alpha v_{t-1} -  \epsilon  \nabla_{\theta} J(\theta + \alpha v_{t-1}) \\
+                                                                \theta = \theta + v_t
+                                                             \] 
+                                                           </mark>
+
+                                                          </li>
+                                                     </ul>                                                          
+                          		 </div>                                                          
+                                                   
+                                                   <aside class="notes">
+  						     
+                                            	   </aside>
+        		           </section>
+
+
+				   <section>
+                                          <mark class="red"></mark>
+                                          <div class="my_container">
+                                            <h4>Nesterov accelerated gradient (NAG)</h4>					    
+                                            <ol>
+					        <img src="href=../../img_2019_Lect_6/SGD_with_Nesterov_Algorithm.png"  height="425" width="1000">           
+
+<br>
+                                                    </ol>     		
+                          		  </div>
+                                                   <p class="paragraph2"> I. Goodfellow and Y. Bengio and A. Courville. <a href="http://www.deeplearningbook.org/"> Deep Learning. Chapter 8. Optimization for Training Deep Models.</a> MIT Press. 2016. </p>      
+					  
+                                                  <aside class="notes">
+                                           	  </aside>
+ 		                 </section>
+
+  
+                                   <section>
+                                             <h3>Gradient descent variants</h3>     
+                                             <h4>Other advanced gradient descent methods</h4>
+                                              <div class="container">
+                                                  <span class="fragment">
+                                                  <div class="right">
+                                                  <h4>Adagrad</h4>
+                                                  <h4>Adadelta</h4>
+                                                  <h4>RMSprop</h4>
+                                                  <h4>Adam</h4>       
+                                                  <h4>AdaMax</h4>
+                                                  <h4>Nadam</h4>                                              
+
+                           		          </div>
+                                                  </span>
+                                                 
+                                                  <div class="left">   
+                                                  <h4>Characteristics</h4>
+                                                      <ul>  
+                                                          <li class="paragraph2"> Adapt the learning rate of parameters (similar to annealing schedules). </li>
+                                                          <li class="paragraph2"> Can use a different learning rate for each parameter. </li>      	
+                                                          <li class="paragraph2"> Some restrict the window of accumulated past gradients to some fixed size \( w \). </li>
+                                                          <li class="paragraph2"> Some keep exponentially decaying average of past gradients.  </li>   	           		         
+      		           	                                                           
+                                                     </ul> 
+
+                                                  </div>    
+                                                   
+                                              </div>  
+                                                   <aside class="notes">
+                                                       What is ML? 
+                                            	   </aside>
+
+                              	   </section>
+
+
+
+				   <section>
+                                          <mark class="red"></mark>
+                                          <div class="my_container">
+                                            <h4>Adagrad</h4>					    
+                                            <ol>
+					        <img src="href=../../img_2019_Lect_6/Adagrad_Algorithm.png"  height="425" width="1000">           
+
+<br>
+                                                    </ol>     		
+                          		  </div>
+                                                   <p class="paragraph2"> I. Goodfellow and Y. Bengio and A. Courville. <a href="http://www.deeplearningbook.org/"> Deep Learning. Chapter 8. Optimization for Training Deep Models.</a> MIT Press. 2016. </p>      
+					  
+                                                  <aside class="notes">
+                                           	  </aside>
+ 			                 </section>
+
+                                          <section>
+                                                    <h2> Gradient optimization methods <h2>                                                                                
+                                                      <p class="paragraph2">
+                                                         <img src="http://cs231n.github.io/assets/nn3/opt1.gif"  height="400" width="400">
+                                                         <img src="http://cs231n.github.io/assets/nn3/opt2.gif"  height="400" width="400">
+                                                      </p>           
+
+                                                    <p class="paragraph2">Images credit: <a href="https://twitter.com/alecrad">  Alec Radford.</a></p>	      
+                                          </section>
+
+
+					  
+                                          <section>
+                                                    <h2> Gradient optimization methods <h2>                                                                                
+                                                      <p class="paragraph2">
+    <img src="http://2.bp.blogspot.com/-q6l20Vs4P_w/VPmIC7sEhnI/AAAAAAAACC4/g3UOUX2r_yA/s1600/s25RsOr%2B-%2BImgur.gif"  height="500" width="900">
+                                                      
+                                                      </p>           
+
+                                                    <p class="paragraph2">Images credit: <a href="https://twitter.com/alecrad">  Alec Radford.</a></p>	      
+                                                   <aside class="notes">  						   
+                                                        <img src="https://i.imgur.com/NKsFHJb.gif"  height="400" width="400">
+                                            	   </aside>
+ 
+                                          </section>
+
+                           </section> 
+
+                           <section> 		
+ 				      <section id="sec:NNs_Competitive">
+                                               <mark class="red"></mark>
+                                               <div class="container">     
+                                                <h3>Competitive learning</h3>    
+                                                   <div class="right">      
+                          		            <div>	 
+                                                      <h4>Objective</h4>   
+                          		            </div>	                        		 
+                                                     <ul>  
+                                                          <li class="paragraph2">The goal of of competitive learning is to <mark class="red">group the data</mark> by forming clusters.</li>
+
+                                                          <li class="paragraph2">It is expected that the <mark class="red">similarities of instances within the same group</mark>  found by the network is as great as possible.</li>
+
+                                                          <li class="paragraph2">The <mark class="red">differences between instances in different classes</mark>  is as great as possible.</li>
+
+                                                          <li class="paragraph2">Generally, no label are used in training the network (i.e., <mark class="red">unsupervised learning</mark>). </li>
+
+
+                                                  </div>                 		         
+
+                                                   <div class="left">  
+
+                                                    <div>	 
+                                                     <h4>Characteristics</h4>   
+                          		            </div>
+                                                     <ul> 
+
+                                                        <li class="paragraph2">A layer of neurons that are <mark class="red">identical</mark> except that their <mark class="red">weights are different</mark>. </li>
+
+                                                        <li class="paragraph2"><mark class="red"> Neurons compete</mark> amongst themselves <mark class="red"></mark> to be activated. </li>
+                                                        <li class="paragraph2"> Only one neuron is activated at each time (<mark class="red">winner-takes-all neuron</mark>). </li>
+                                                         <li class="paragraph2">The <mark class="red">learning mechanism</mark> strengths the mapping between certain neurons and particular inputs. </li> 
+      
+                                                         <li class="paragraph2"> They are used for <mark class="red">data mining</mark>, <mark class="red">data visualization</mark>, <mark class="red">dimensionality reduction</mark> and <mark class="red">exploratory data analysis</mark>. </li>
+                           
+                                                  </ul> 
+                             
+                                                     </ul>    
+
+                          		    
+                                                   </div>  
+                                                     
+                                             </div>  
+                                          
+                                      
+                                                  <aside class="notes">
+                                            	  </aside>
+                              
+        		             </section>   
+
+
+                                     <section>
+                                               <mark class="red"></mark>
+                                               <div class="container">     
+                                                   <h3>Competitive learning</h3>      
+                                                  <div class="right">      
+
+                          		            <div>	 
+                                                     <h4>Characteristics</h4>   
+                          		            </div>
+                                                     <ul> 
+                                                        <li class="paragraph2"> The learning rule is a variant of <mark class="red">Hebbian learning</mark>  (with weight decay).  </li>
+                                                        <li class="paragraph2"> A <mark class="red">potential problem</mark> is that some neurons may continue to gain the competition while other neurons are never selected. </li>
+                                                   
+                                                  </ul> 
+
+
+                                                   </div>                 		         
+
+                                                   <div class="left">  
+                          		            <div>	 
+                                                      <h4>Typical learning</h4>   
+                          		            </div>	                        		 
+                                                     <ul>  
+                                                        <li class="paragraph2"> The <mark class="red">output</mark> of all neurons is computed as 
+							  <br>
+							  <br>
+							  \[
+							    y_i = \sum_{j} w_{i,j} x_j, \forall \; i
+
+                                                          \]
+
+
+                                                        </li>
+                                                        <p class="paragraph2">and the <mark class="red">winner neuron</mark>  is computed as the one whose prediction is the best.  </p>
+                                                       <li class="paragraph2"> Then, the <mark class="red">weights</mark> for the winning neuron \(i\) <mark class="red">are updated</mark> as:
+							 \[
+							    \Delta w_{i,j} = \eta (x_j - w_{i,j})
+
+                                                          \]
+
+
+                                                        </li>
+
+
+                                                  </ul>    
+
+                          		    
+                                                </div>  
+                                                     
+                                             </div>  
+                                          
+                                      
+                                                  <aside class="notes">
+                                            	  </aside>
+                              
+        		             </section>   
+
+
+                                     <section  id="sec:NNs_SOM">     					
+                                               <mark class="red"></mark>
+                                               <div class="container">     
+                                                   <h3>Self Organizing Map (SOM)</h3>
+                                                    <h4>Cortical sensory homunculus</h4>
+                                         
+                                                  <div class="right">
+
+                                                      <ul>      
+                                                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/1421_Sensory_Homunculus.jpg/800px-1421_Sensory_Homunculus.jpg"  height="340" width="500">           
+					                
+                                                      </ul>                                               
+                                                 
+                          		          </div>                                      
+                                                  <div class="left">   
+
+                                                  
+                                                      <ul>      
+                                                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Front_of_Sensory_Homunculus.gif"  height="380" width="500">           
+					                
+                                                      </ul>      
+   
+                                                      
+                                                  </div>    
+                                                   
+                                               </div>
+					                                                                <p class="paragraph2"> By OpenStax College - Anatomy &amp; Physiology, Connexions Web site. <a rel="nofollow" class="external free" href="http://cnx.org/content/col11496/1.6/">http://cnx.org/content/col11496/1.6/</a>, Jun 19, 2013., <a href="http://creativecommons.org/licenses/by/3.0" title="Creative Commons Attribution 3.0">CC BY 3.0</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=30148008">Link</a>  </p>
+                                                   <p class="paragraph2"> By Mpj29 (Own work) [<a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>], <a href="https://commons.wikimedia.org/wiki/File%3AFront_of_Sensory_Homunculus.gif">via Wikimedia Commons</a>  </p>                                      
+                                                  <aside class="notes">
+						    SOM is one of the simplest models but it can be very useful for visualization and dimensionality reduction.
+                                            	  </aside>                                         
+                                      </section> 
+
+
+				      <section>        
+                                               <mark class="red"></mark>
+                                               <div class="container">     
+                                                   <h3>Self Organizing Map (SOM)</h3>
+                                        
+                                                  <div class="right">
+
+                                                      <ul>      
+                                                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/1421_Sensory_Homunculus.jpg/800px-1421_Sensory_Homunculus.jpg"  height="380" width="500">           
+					                
+                                                      </ul>                                                                                               
+                                                        
+                          		          </div>                                      
+                                                  <div class="left">   
+                         		            <div>
+                                                        <h4>Cortical maps</h4>  
+                          		            </div>	                        		 
+                                                     <ul>  
+                                                        <li class="paragraph2">In the cortex, <mark class="red">neurons</mark>  that process information about sensor and motor commands of  a <mark class="red">common</mark> anatomical region of the body  <mark class="red">share  a similar location</mark>.  </li>
+                                                        <li class="paragraph2"> The <mark class="red">extensions of the brain regions</mark> dedicated to process sensory information is <mark class="red">different according to the  part of the body</mark>.   </li>
+
+
+                                                        <li class="paragraph2"> For example,  a higher proportion of neurons is devoted to process data from the hands.  </li>
+                                                   
+                                                       
+                                                     </ul> 
+                                             
+                                                      
+                                                  </div>    
+                                                   
+                                               </div>
+					        <p class="paragraph2"> By OpenStax College - Anatomy &amp; Physiology, Connexions Web site. <a rel="nofollow" class="external free" href="http://cnx.org/content/col11496/1.6/">http://cnx.org/content/col11496/1.6/</a>, Jun 19, 2013., <a href="http://creativecommons.org/licenses/by/3.0" title="Creative Commons Attribution 3.0">CC BY 3.0</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=30148008">Link</a>  </p>
+                                                  <aside class="notes">
+						    SOM is one of the simplest models but it can be very useful for visualization and dimensionality reduction.
+                                            	  </aside>
+                                          
+                                                 
+        		             </section> 
+
+				      <section>        
+                                               <mark class="red"></mark>
+                                               <div class="container">
+                                                   <h3>Neural Networks</h3>           
+                                                   <h4>Self Organizing Map (SOM)</h4>                                          
+                                                  <div class="right">
+                                                  <h4>Network architecture</h4>
+                                                      <ul>      
+                                                        <img src="href=../../img/NNZoo/kn.png"  height="300" width="500">           
+					                
+                                                      </ul>                                               
+                                                    
+       
+                          		          </div>                                      
+                                                  <div class="left">   
+                                                      <h4>Characteristics</h4>
+                                                      <ul>      
+
+
+						        <li class="paragraph2">Mainly applied for <mark class="red">clustering</mark>  and  <mark class="red">dimensionality reduction</mark> of high-dimensional data.  </li>
+	 				                  <li class="paragraph2">Also used as a visualization tool. </li>
+						          <li class="paragraph2">In the reduced space, it retains the <mark class="red">topological similarity</mark>  of data points. </li>                                                 
+						          <li class="paragraph2">In most applications, a <mark class="red">2-dimensional lattice-like</mark> , representation is learned. </li>
+						          <li class="paragraph2">The network <mark class="red">self-organizes</mark> depending on the input data. </li>
+
+                                                      </ul>    
+                                                  </div>
+						  					       <p class="paragraph2">T.  Kohonen. <a href="http://ieeexplore.ieee.org/document/58325/">The self-organizing map. </a> Proceedings of the IEEE, 78(9):1464--1480. 1990.  </p>    
+                                                   
+                                               </div>
+  
+                                                  <aside class="notes">
+						    SOM is one of the simplest models but it can be very useful for visualization and dimensionality reduction.
+                                            	  </aside>
+                                          
+                                                 
+        		             </section> 
+
+
+                                    <section>
+                                               <mark class="red"></mark>
+                                               <div class="container">     
+                                                  <h3>Self Organizing Map (SOM)</h3>     
+  
+                                                  <div class="right">      
+
+                          		                             		 
+                                                     <ul>  
+   
+                                                        <img src="http://matias-ck.com/mlz/_images/scheme2.png"  height="380" width="500">    
+
+
+                                                    
+                                                     </ul>         
+                                                      <p class="paragraph2"> Figure. <a href="http://matias-ck.com/mlz/somz.html">SOMz: Self Organizing Maps and random atlas.</a> </p>                                                
+                                                   </div>                 		         
+
+                                                   <div class="left">  
+
+                                                     <div>
+						    <h4>Topographic maps</h4>  
+                          		            </div>	                        		 
+                                                     <ul>  
+ 
+                                                        <li class="paragraph2"> A <mark class="red">feature map</mark> uses the topological (physical) organization of the neurons to <mark class="red">model features of the input space</mark>. </li> 
+                                                        <li class="paragraph2"> It is expected that if <mark class="red">two inputs are close in the feature space</mark>, then the two neurons that respond (fire) to these inputs will be  <mark class="red">close in the layout of the neural network</mark>.   </li>
+                                                        <li class="paragraph2"> Similarly, if two neurons that are <mark class="red">close in the neural network</mark>, fire to two different inputs, then these inputs are <mark class="red">close in the feature space</mark>.  </li>                                                       
+                                                     </ul>                   
+                                                   </div>                                                       
+                                             </div>  
+                                          
+                                      
+                                                  <aside class="notes">
+                                            	  </aside>
+                              
+        		             </section>   
+
+				    <section>
+                                          <div class="my_container">
+                                                  <h3>SOM simulation 3D</h3>
+
+						     <ul>
+						       <iframe width="560" height="415" src="https://www.youtube.com/embed/RqAa8Uu9zbQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+						            
+				
+                                                    </ul>  
+                                	                                                       
+                                               
+                                              
+                          		  </div>
+
+                                                   
+                                                   <aside class="notes">
+  						      There are important differents among animals. However, for most of more complex biological forms the the nervous system has a similar structure.  
+                                            	   </aside>
+                          	
+
+			          </section>
+
+				  <section>
+                                          <div class="my_container">
+                                                  <h3>SOM simulation 2D</h3>
+
+						  <ul>
+
+						    <iframe width="560" height="415" src="https://www.youtube.com/embed/UO9flv76aQE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					            
+				
+                                                    </ul>  
+                                	                                                       
+                                               
+                                              
+                          		  </div>
+
+                                                   
+                                                   <aside class="notes">
+  						      There are important differents among animals. However, for most of more complex biological forms the the nervous system has a similar structure.  
+                                            	   </aside>
+                          	
+
+			          </section>
+
+
+				  				  <section>
+                                          <div class="my_container">
+                                                  <h3>SOM simulation 2D TSP</h3>
+
+						  <ul>
+
+					            <iframe width="560" height="415" src="https://www.youtube.com/embed/8tnxgfE6glI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+				
+                                                    </ul>  
+                                	                                                       
+                                               
+                                              
+                          		  </div>
+
+                                                   
+                                                   <aside class="notes">
+  						      There are important differents among animals. However, for most of more complex biological forms the the nervous system has a similar structure.  
+                                            	   </aside>
+                          	
+
+			          </section>
+
+                                    <section>
+                                               <mark class="red"></mark>
+                                               <div class="container">     
+                                                  <h3>Kohonen network</h3>     
+  
+                                                  <div class="right">      
+
+                          		                             		 
+                                                     <ul>  
+   
+                                                        <img src="http://matias-ck.com/mlz/_images/scheme2.png"  height="380" width="500">    
+
+
+                                                    
+                                                     </ul>         
+                                                                          
+                                                   </div>                 		         
+
+                                                   <div class="left">  
+                          		            <div>
+                                                        <h4>Characteristics</h4>  
+                          		            </div>	                        		 
+                                                     <ul>  
+                                                        <li class="paragraph2"> It is a particular <mark class="red">type of SOM</mark>. </li> 
+
+                                                         <li class="paragraph2"> One <mark class="red">input layer</mark> and a <mark class="red">computational layer of neurons</mark>. </li> 
+                                                        <li class="paragraph2"> Neurons are arranged in <mark class="red">rows and columns</mark>. </li> 
+
+                                                        <li class="paragraph2"> All neurons in the computational layer are <mark class="red">connected to all input nodes</mark. </li>                                                       
+                                                     </ul>    
+
+                                                   </div>  
+                                             </div>  
+                                          
+                                      
+                                                  <aside class="notes">
+                                            	  </aside>
+                            
+         		             </section>   
+
+
+								  
+			          <section>
+                                               <mark class="red"></mark>
+                                               <div class="container">     
+                                                  <h3>Kohonen Networks</h3>     
+  
+                                                  <div class="right">      
+                          		             <div>
+						        <h4>Initialization and competition</h4>  
+                          		            </div>
+
+                                                    <ul>
+						        
+                                                        <li class="paragraph2"> The synaptic weight vector of each neuron has the  <mark class="red">same dimension </mark>  as the input space: \( w_j = (w_{j,1},w_{j,2},\dots,w_{j,n}) \). </li> 
+
+                                                         <li class="paragraph2">  \( i(x) \) is the neuron that <mark class="red">best matches</mark> the input vector \(x\). </li> 
+                                                        <li class="paragraph2"> The particular neuron that satisfies this condition is called the  <mark class="red">best matching</mark> or <mark class="red">winning neuron</mark>. </li>
+
+							<li class="paragraph2"> The <mark class="red">winning neuron</mark> is determined using a discriminant function that, for all \(j\) computes the distance between \(w_j\) and the input \(x\). </li>
+
+                                                                                  
+                                                     </ul>    
+                                                   
+                                                   </div>                 		         
+
+                                                   <div class="left">  
+                                                     <div>
+						      <h4>Main steps of the learning algorithm</h4>  
+                          		            </div>	                        		 
+                                                     <ol>  
+ 
+                                                        <li class="paragraph2"><mark class="red">Initialization</mark></li> 
+                                                        <li class="paragraph2"><mark class="red">Competition</mark></li> 
+                                                         <li class="paragraph2"><mark class="red">Cooperation</mark></li> 
+                                                        <li class="paragraph2"><mark class="red">Adaptation</mark></li> 
+                                                                                                    
+                                                     </ol>
+						     
+
+                                                   </div>  
+                                                     
+                                             </div>  
+                                          
+                                      
+                                                  <aside class="notes">
+                                            	  </aside>
+                              
+        		          </section>
+			          <section>
+                                              <mark class="red"></mark>
+                                               <div class="container">     
+                                                  <h3>Kohonen Networks</h3>     
+  
+                                                  <div class="right">      
+                          		             <div>
+						        <h4>Cooperation</h4>  
+                          		            </div>
+
+                                                    <ul>
+						        
+                                                        <li class="paragraph2"> <mark class="red">Lateral interaction </mark>: A network that is firing tends to excite the neurons in its immediate neighborhood more than those farther away. </li> 
+
+                                                         <li class="paragraph2">  A <mark class="red">topological neighborhood</mark> \(h_{j,i}\)  centered  around the winning neuron \(i\) and encopassing  excited neuron \(j\) is defined. </li> 
+                                                        <li class="paragraph2"> The   <mark class="red">lateral distance</mark>  between \(i\) and \(j\) is \(d_{j,i}\). </li>
+
+							<li class="paragraph2"> Then  \(h_{j,i}\) is a function of the lateral distance. </li>
+
+                                                                                  
+                                                     </ul>    
+                                                   
+                                                   </div>                 		         
+
+                                                   <div class="left">  
+                                                     <div>
+						      <h4>Main steps of the learning algorithm</h4>  
+                          		            </div>	                        		 
+                                                     <ol>  
+ 
+                                                        <li class="paragraph2"><mark class="red">Initialization</mark></li> 
+                                                        <li class="paragraph2"><mark class="red">Competition</mark></li> 
+                                                         <li class="paragraph2"><mark class="red">Cooperation</mark></li> 
+                                                        <li class="paragraph2"><mark class="red">Adaptation</mark></li> 
+                                                                                                    
+                                                     </ol>
+						     
+
+                                                   </div>  
+                                                     
+                                             </div>  
+                                          
+                                      
+                                                  <aside class="notes">
+                                            	  </aside>
+                              
+        		             </section>   
+
+
+
+                                     <section>
+                                               <mark class="red"></mark>
+                                               <div class="container">     
+                                                 <h3>Kohonen Networks</h3>   
+            
+                                                  <div class="right">      
+
+                          		            <div>	 
+                                                     <h4>Cooperation and adaptation</h4>   
+                          		            </div>
+                                                     <ul> 
+                                                        <li class="paragraph2">A <mark class="red">topological neighborhood</mark> that  decays with the lateral distance \( S_{i,j} \) is defined in the grid of neurons as:
+							  \[
+							    h_{j,i(x)} = e^{\frac{-d^2_{j,i(x)}}{2\sigma^2}}
+							  \]
+                                                        </li>               
+							<p class="paragraph2">where \( \sigma \) is the size of the neighborhood. </p>                                    
+                                                   
+                                                     </ul> 
+
+                                                     <ul> 
+                                                        <li class="paragraph2">Neighbors to the winning neuron have their <mark class="red">weights updated</mark> as:
+
+							  \[
+                                                            \Delta w_{j} = \eta(t) \cdot  h_{j,i(x)} \cdot (x - w_{j})
+							  \]
+
+
+                                                        </li>
+                                                        <p class="paragraph2">where the <mark class="red">learning rate</mark> \(\eta\)  depends on <mark class="red">time</mark> .    </p>
+                                           
+                                                   
+                                                     </ul> 
+
+
+                                                   </div>                 		         
+
+                                                   <div class="left">  
+                          		            <div>	 
+                                                     <h4>Initialization</h4>   
+                          		            </div>
+                                                     <ul> 
+                                                        <li class="paragraph2">All weights \(w_{j}\) are <mark class="red">randomly initialized</mark>. </li>                                          
+                                                     </ul> 
+                          		            <div>	 
+                                                      <h4>Competition</h4>   
+                          		            </div>	                        		 
+                                                     <ul>  
+                                                        <li class="paragraph2">For a given input \( x \), the winning neuron \(i(x)\) is computed
+                                                        <p class="paragraph2">  
+                                                        \[ 
+							  i(x)  =  \min_j  \left ( x -w_{j} \right )^2
+                                                        \] 
+                                                        </p>
+                                                        <li class="paragraph2"> <mark class="red">Other discriminant functions</mark> could be used.  </li>
+                                                       
+                                                     </ul>    
+
+                          		    
+                                                   </div>  
+                                                     
+                                             </div>  
+                                          
+                                      
+                                                  <aside class="notes">
+                                            	  </aside>
+                              
+        		             </section>   
+
+
+				      <section>
+                                          <div class="my_container">
+                                               <mark class="red"></mark>   
+                                                  <h3>Kohonen Networks</h3>   
+                                                  <h4>Limitations</h4> 
+                                             
+                                                   <ol>
+                                                          <li class="paragraph2"> A <mark class="red">representative set of sufficient instances</mark> is needed in order to develop meaningful clusters. </li>
+                                                          <li class="paragraph2">It <mark class="red">requires several parameters</mark>  (e.g., \( \sigma_0, \tau_{sigma}, \eta_{0}, \tau_{\eta}) \) and can be <mark class="red">sensitive to the choice of these parameters</mark>. </li>
+
+                                                          <li class="paragraph2"> Clusters will often be split into smaller clusters, creating <mark class="red">different regions containing similar neurons</mark>. </li>
+
+
+                                                          <li class="paragraph2">  The algorithm <mark class="red">assumes a low dimensional non-linear Euclidean manifold</mark>  in the data space on which the data lies.  </li>
+                                        
+						  
+                                                    </ol>     						           
+                          		 </div>                                                 
+                                                  <aside class="notes">
+                                                                                                  
+                                           	  </aside>
+ 				      </section> 
+
+                                      <section  id="sec:NN_Quantization">
+                                          <div class="my_container">                
+						  <h3> Vector Quantization</h3>                               
+                                                   <ul>
+                                                    <img src="href=../../imgl9/Image_Quantization.png"  height="420" width="1200">   
+                                                   </ul>                
+          
+                          		 </div>   
+                                            
+                                                      <p class="paragraph2">C. Karri and U. Jena. <a href="https://ac.els-cdn.com/S2215098615001664/1-s2.0-S2215098615001664-main.pdf?_tid=961b9a40-b2c3-11e7-b6f7-00000aab0f27&acdnat=1508194056_13603fea5445cf0136daecb9d0b378fa">Fast vector quantization using a bat algorithm for image compression.</a>Engineering Science and Technology, an International Journal. Vol. 19. No. 2. Pp.  769-781. 2016.</p>                               
+
+             
+                                                  <aside class="notes">
+                                            	  </aside>
+ 				      </section>
+
+
+                                      <section>
+                                          <div class="my_container">                
+						  <h3> Vector Quantization with competitive learning NNs</h3>                               
+                                                   <ul>
+                                                    <img src="href=../../imgl9/VectorQuantization_CodeBooks.png"  height="420" width="1200">   
+                                                   </ul>                
+          
+                          		 </div>   
+                                            
+                                                      <p class="paragraph2">H. C. Howard et al. <a href="http://ieeexplore.ieee.org/abstract/document/707586/">Competitive learning algorithms and neurocomputer architecture.</a>IEEE Transactions on Computers. Vol. 47. No. 8. Pp. 847-858. 1998.</p>                               
+
+                                                  <aside class="notes">
+                                            	  </aside>
+ 				      </section>
+
+
+				      <section>        
+                                               <mark class="red"></mark>
+                                               <div class="container">     
+						  <h3>Learning Vector Quantization</h3>    
+                                        
+                                                  <div class="right">
+
+                                                      <ul>      
+                                                        <img src="http://www.neural-forecasting.com/lvq_neural_nets-Dateien/image002.jpg"  height="420" width="500">           
+					                
+                                                      </ul> 
+
+                                                       <p class="paragraph2"> Figure. <a href="http://www.neural-forecasting.com/lvq_neural_nets.htm"> Forecasting with artificial neural networks.</a> </p>                                              
+                                                 
+                          		          </div>                                      
+                                                  <div class="left">   
+                          		            <div>
+						      <h4>Characteristics</h4>  
+                          		            </div>
+                                                     <ul>  
+                                                        <li class="paragraph2"> Codebook vectors represent <mark class="red"> class regions</mark>.</li> 
+
+                                                       <li class="paragraph2"> Each codebook vector is <mark class="red"> defined by the weights </mark> between one neuron and all the inputs.</li> 
+
+                                                         <li class="paragraph2">Each <mark class="red">prototype represents a region</mark>  labelled with a class. </li> 
+
+                                                         <li class="paragraph2">Prototypes are localized in the centre of a class or decision region (<mark class="red">"Voronoi cell"</mark>) in the input space. </li> 
+
+
+                                                         <li class="paragraph2">The regions are <mark class="red">separated by the hyperplanes</mark> between the prototypes.</li>                                 
+    
+                                                         <li class="paragraph2">A class can be represented by an <mark class="red">arbitrary number of prototypes</mark>. One prototype can only represent a <mark class="red">single class</mark>.</li> 
+
+
+
+                                                      </ul>                                                      
+                                                      
+                                                      
+                                                  </div>    
+                                                   
+                                              </div>  
+                                                  <aside class="notes">
+						  </aside>
+                                          
+                                                 
+        		             </section> 
+                                    <section>
+                                               <mark class="red"></mark>
+                                               <div class="container">     
+                                                  <h3>Competitive learning algorithms</h3>     
+  
+                                                  <div class="right">      
+
+                          		            <div>
+						      <h4>LVQ variants and developments</h4>  
+                          		            </div>	                        		 
+                                                     <ul>  
+ 
+                                                        <li class="paragraph2">Different <mark class="red">variants of LVQ</mark>  algorithms have been proposed.</li> 
+                                                        <li class="paragraph2">They mainly differ in the <mark class="red">learning rules</mark>  used.</li> 
+                                                        <li class="paragraph2">LVQ1, LVQ2.1 and LVQ3 proposed by Kohonen used <mark class="red">heuristic learning rules</mark>.</li> 
+                                                        <li class="paragraph2">Other extensions use <mark class="red">Margin Maximization</mark>  and <mark class="red">Likelihood-ratio maximization</mark>. </li> 
+
+
+                                                     </ul>         
+
+                                                                                                      
+                                                   </div>                 		         
+
+                                                   <div class="left">  
+                          		            <div>
+                                                        <h4>LVQ Learning</h4>  
+                          		            </div>	                        		 
+                                                     <ul>  
+                                                        <li class="paragraph2">Learning consists of <mark class="red">modifying the weights</mark>  in accordance with adapting rules. </li> 
+                                                        <li class="paragraph2">Given an input,  the <mark class="red">winner neuron</mark> is moved <mark class="red">closer</mark> if it correctly classifies the input or moved in the <mark class="red">oppossite direction</mark>  otherwise.</li> 
+
+                                                        <li class="paragraph2">The magnitudes of these weight adjustments are controlled by a <mark class="red">learning rate </mark> which can be lowered over time in order to get finer movements in a later learning phase.</li> 
+
+                                                        <li class="paragraph2">The <mark class="red">class boundaries are adjusted</mark> during the learning proces correspond to the class of the prototype.</li> 
+                                                        <li class="paragraph2">The classification is <mark class="red">optimal </mark> if all inputs fall within a  cell with the right class.</li> 
+
+
+                                                     </ul>    
+
+                                                   </div>  
+                                                     
+                                             </div>  
+                                           <p class="paragraph2"> D. Nova and P. A. Estevez. <a href="https://link.springer.com/article/10.1007/s00521-013-1535-3"> A review of learning vector quantization classifiers.</a> Neural Computing and Applications 25.3-4. Pp. 511-524. 2014.</p> 
+                                      
+                                                  <aside class="notes">
+                                            	  </aside>
+                              
+        		             </section> 
+
+                                     <section>
+                                               <mark class="red"></mark>
+                                               <div class="container">     
+                                                  <h3>Competitive learning algorithms for quantization (Summary)</h3>     
+  
+                                                  <div class="right">      
+
+                          		            <div>
+						      <h4>Learning Vector Quantization</h4>  
+                          		            </div>	                        		 
+                                                     <ul>  
+ 
+                                                        <li class="paragraph2"><mark class="red"> Supervised</mark> learning algorithm.</li> 
+                                                        <li class="paragraph2"> Prototypes will serve to define  <mark class="red">class regions</mark>.</li> 
+                                                        <li class="paragraph2">The goal is to minimize  the <mark class="red"> number of misclassifications</mark>.</li> 
+                                                        <li class="paragraph2">The computational cost depends on the <mark class="red">number of prototypes</mark>.</li> 
+                                                        <li class="paragraph2">They can be used for <mark class="red">multi-class</mark> problems.</li> 
+ 
+                                                     </ul>                                                         
+                                                   </div>                 		         
+
+                                                   <div class="left">  
+                          		            <div>
+                                                        <h4>Vector Quantization</h4>  
+                          		            </div>	                        		 
+                                                     <ul>  
+ 
+                                                        <li class="paragraph2"><mark class="red">Unsupervised</mark> learning algorithm.</li> 
+                                                        <li class="paragraph2">The goal is <mark class="red">learning</mark> prototypes (<mark class="red">codevectors</mark>) that minimize the reconstruction error.</li> 
+                                                        <li class="paragraph2">Very related to <mark class="red">self-organizing maps</mark>.</li> 
+                                                        <li class="paragraph2">It is used for <mark class="red">clustering</mark>, <mark class="red">data compression</mark>, and <mark class="red">visualization.</mark></li> 
+ 
+                                                     </ul>    
+
+                                                   </div>  
+                                                     
+                                             </div>  
+                                          
+                                      
+                                                  <aside class="notes">
+                                            	  </aside>
+                              
+        		             </section>
+
+			       </section>	     
+ 				<section>
+				      <section  id="sec:NNs_Spiking">        
+                                               <mark class="red"></mark>
+                                               <div class="container">       
+                                                   <h3>Spiking Neural Networks</h3>                                          
+                                                  <div class="right">
+                                                  <h4>Neural network in the brain</h4>
+                                                      <ul>      
+                                                        <img src="https://chickswithcrossbows.files.wordpress.com/2012/01/neuronas_ramon_y_cajal.jpg"  height="400" width="500">           
+					                
+                                                      </ul>                                               
+                                                     
+       
+                          		          </div>                                      
+                                                  <div class="left">   
+                                                      <h4>Characteristics</h4>
+                                                      <ul>      
+
+						          <li class="paragraph2">SNNs are formed by neuron models that communicate by <mark class="red">sequences of spikes</mark>.</li>
+
+						          <li class="paragraph2"> The spiking dynamics of the neurons are described by <mark class="red">differential equations</mark></li>
+
+
+						          <li class="paragraph2">Neurons are connected by  <mark class="red">artificial sypnases</mark>.</li>
+
+						          <li class="paragraph2">They are powerful tools for analysis of elementary processes in the brain.</li>
+						          <li class="paragraph2">Used for fast <mark class="red">signal-processing</mark>, <mark class="red">event detection</mark>, <mark class="red">classification</mark>, <mark class="red">speech recognition</mark>, or <mark class="red">motor control</mark>.</li>
+						          <li class="paragraph2">Computationally <mark class="red">more powerful than perceptrons</mark>  and sigmoidal gates.</li>
+
+                                                      </ul>    
+                                                     
+						  </div>
+						 
+                                                    <p class="paragraph2">F. Ponulak and A. Kasinski <a href="https://www.infona.pl/resource/bwmeta1.element.agro-5be23866-c1b7-49a2-b1f0-38313d42386c"> Introduction to spiking neural networks: Information processing, learning and applications. </a> Acta neurobiologiae experimentalis 4.71. 2011.</p>     
+                                              </div>  
+                                                  <aside class="notes">
+					
+                                            	  </aside>                                         
+                                                 
+        		             </section> 
+
+				      <section>
+                                          <div class="my_container">
+                                               <mark class="red"></mark>   
+                                                   <h3>Spiking Neural Networks</h3>  
+                                                    <h4>Neuronal behavior</h4>
+
+                                                   <ol>
+                                                       <img src="href=../../imgl9/Dendrites_Soma_Axon.png"  height="420" width="1000">  
+					  
+                                                    </ol>     						           
+                          		 </div>                         
+                                                      <p class="paragraph2">Figure: J. Vreeken <a href="http://zbc.uz.zgora.pl/Content/7127/7kasin.pdf"> Spiking neural networks: an introduction. </a> Research Report UU-CS-2003-008. Utrecht University Technical. 2002.</p>    
+                                                                         
+                                                  <aside class="notes">
+                                                                                                  
+                                           	  </aside>
+ 				      </section> 
+
+				      <section>
+                                          <div class="my_container">
+                                               <mark class="red"></mark>   
+                                                
+                                                    <h3>Spiking neuron model</h3>
+
+                                                   <ol>
+                                                       <img src="href=../../imgl9/Spiking_Neuron_Paugam_et_al.png"  height="400" width="1000">  
+					  
+                                                    </ol>     						           
+                          		 </div>       
+                                                      <p class="paragraph2">H. Paugam-Moisy,  S. Bohte. <a href="http://ccfit.nsu.ru/~tarkov/Spiking%20neural%20networks/Bohte_Computing_with_spiking_neural_network.pdf">Computing with spiking neuron networks.</a> Handbook of natural computing. Pp. 335-376. 2012.</p>                     
+                                                                         
+                                                  <aside class="notes">
+                                                                                                  
+                                           	  </aside>
+ 				      </section> 
+
+				      <section>
+                                          <div class="my_container">
+                                               <mark class="red"></mark>   
+                                                   <h3>Spiking Neural Networks</h3>  
+                                                    <h4>Spiking neuron model</h4>
+
+
+                                                   <ol>
+                                                       <img src="href=../../imgl9/IF_Model_Paugam_et_al.png"  height="420" width="1000">  
+					  
+                                                    </ol>     						           
+                          		 </div>       
+                                                      <p class="paragraph2">H. Paugam-Moisy,  S. Bohte. <a href="http://ccfit.nsu.ru/~tarkov/Spiking%20neural%20networks/Bohte_Computing_with_spiking_neural_network.pdf">Computing with spiking neuron networks.</a> Handbook of natural computing. Pp. 335-376. 2012.</p>                     
+                                                                         
+                                                  <aside class="notes">
+                                                                                                  
+                                           	  </aside>
+ 				      </section> 
+
+                                      <section>
+                                          <div class="my_container">
+                                               <mark class="red"></mark>   
+                                                   <h3>Spiking Neural Networks</h3>  
+                                                    <h4>Spiking neuron model</h4>
+
+
+                                                   <ol>
+                                                       <img src="href=../../imgl9/LIF_Neuron_Integration.png"  height="420" width="1000">  
+					  
+                                                    </ol>     						           
+                          		 </div>                       
+                                                      <p class="paragraph2">Figure: F. Ponulak and A. Kasinski <a href="https://www.infona.pl/resource/bwmeta1.element.agro-5be23866-c1b7-49a2-b1f0-38313d42386c"> Introduction to spiking neural networks: Information processing, learning and applications. </a> Acta neurobiologiae experimentalis 4.71. 2011.</p>                            
+                                                  <aside class="notes">
+                                                                                                  
+                                           	  </aside>
+ 				      </section> 
+ 				</section> 		      
+
+			</div>
+		</div>
+
+
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			Reveal.initialize({
+
+                             
+   	                        history: true,
+				transition: 'linear',
+
+				math: {
+					// mathjax: 'http://cdn.mathjax.org/mathjax/latest/MathJax.js',
+					config: 'TeX-AMS_HTML-full'
+				},
+
+				dependencies: [
+                                        { src: 'lib/js/fullscreen-img.js' },
+					{ src: 'lib/js/classList.js' },
+					{ src: 'plugin/math/math.js', async: true }
+
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
